@@ -20,8 +20,6 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Run tariff experiment and save results")
     parser.add_argument("--out_dir", type=str, default="run_0", 
                         help="Output directory for results")
-    parser.add_argument("--output_file", type=str, default="tariff_experiment_results.json", 
-                        help="Name of the output JSON file")
     return parser.parse_args()
 
 
@@ -90,12 +88,12 @@ def solve_equilibrium(a, b, S, c_s, tau):
         'profit': profit_eq
     }
 
-def run_experiment(output_path='results.json'):
+def run_experiment():
     """
-    Run the tariff experiment and save results to a JSON file.
+    Run the tariff experiment and return results.
     
-    Args:
-        output_path: Path to save the JSON results file
+    Returns:
+        dict: Results of the experiment
     """
     # -------------------------------
     # 1) Parameter Setup
@@ -157,17 +155,6 @@ def run_experiment(output_path='results.json'):
                 
         results['comparisons'][str(tau)] = pct_changes
     
-    # -------------------------------
-    # 3) Save Results to JSON
-    # -------------------------------
-    # Create directory if it doesn't exist
-    os.makedirs(os.path.dirname(output_path) if os.path.dirname(output_path) else '.', exist_ok=True)
-    
-    with open(output_path, 'w') as f:
-        json.dump(results, f, indent=2)
-        
-    print(f"Results saved to {output_path}")
-    
     return results
 
 def main():
@@ -179,24 +166,14 @@ def main():
     out_dir = args.out_dir
     os.makedirs(out_dir, exist_ok=True)
     
-    # Set up output path
-    output_path = os.path.join(out_dir, args.output_file)
-    
-    # Also ensure results directory exists for compatibility with plot.py
-    results_dir = os.path.join("results")
-    os.makedirs(results_dir, exist_ok=True)
-    
-    # Create a symlink or copy to results dir for compatibility with plot.py
-    results_path = os.path.join(results_dir, "tariff_experiment_results.json")
-    
     # Run the experiment
-    results = run_experiment(output_path=output_path)
+    results = run_experiment()
     
-    # If the output isn't already in the results directory, copy it there for convenience
-    if output_path != results_path:
-        with open(results_path, 'w') as f:
-            json.dump(results, f, indent=2)
-        print(f"Results also saved to {results_path} for compatibility")
+    # Save results to final_info.json in the output directory
+    final_info_path = os.path.join(out_dir, "final_info.json")
+    with open(final_info_path, 'w') as f:
+        json.dump(results, f, indent=2)
+    print(f"Results saved to {final_info_path}")
     
     print(f"Experiment complete. Results saved to {out_dir}/")
 
