@@ -19,10 +19,6 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Generate market value plots")
     parser.add_argument("--out_dir", type=str, default="run_0", 
                         help="Output directory for plots")
-    parser.add_argument("--results_dir", type=str, default=None,
-                        help="Input directory containing results (defaults to out_dir)")
-    parser.add_argument("--results_file", type=str, default="tariff_experiment_results.json", 
-                        help="Name of the results JSON file")
     return parser.parse_args()
 
 
@@ -206,39 +202,12 @@ def main():
     output_dir = args.out_dir
     os.makedirs(output_dir, exist_ok=True)
     
-    # Determine results directory and path
-    results_dir = args.results_dir if args.results_dir else args.out_dir
-    results_path = os.path.join(results_dir, args.results_file)
+    # Load results directly from the final_info.json file
+    results_path = os.path.join(output_dir, "final_info.json")
     
-    # Check standard results path as fallback
-    standard_results_path = os.path.join("results", args.results_file)
-    
-    # Check if results file exists in results_dir
     if not os.path.exists(results_path):
-        print(f"Results file not found at {results_path}")
-        
-        # Check if it exists in the standard results location
-        if os.path.exists(standard_results_path):
-            print(f"Found results at standard location: {standard_results_path}")
-            results_path = standard_results_path
-        else:
-            # Try to run the experiment if results don't exist
-            print(f"No results found. Running experiment...")
-            try:
-                from experiment import run_experiment
-                
-                # Ensure output directory exists
-                os.makedirs(output_dir, exist_ok=True)
-                
-                # Run experiment, saving to output_dir
-                result_file_path = os.path.join(output_dir, args.results_file)
-                results = run_experiment(output_path=result_file_path)
-                results_path = result_file_path
-                
-                print(f"Experiment complete. Results saved to {results_path}")
-            except ImportError:
-                print("Could not import experiment module. Make sure experiment.py is in the same directory.")
-                return
+        print(f"Error: Results file not found at {results_path}")
+        return
     
     # Load results
     results = load_results(results_path)
