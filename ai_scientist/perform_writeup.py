@@ -130,52 +130,43 @@ def compile_latex(cwd, pdf_file, timeout=30):
 per_section_tips = {
     "Abstract": """
 - TL;DR of the paper
-- What are we trying to do and why is it relevant?
-- Why is this hard? 
-- How do we solve it (i.e. our contribution!)
-- How do we verify that we solved it (e.g. Experiments and results)
+- What are we trying to do?
+- What are the key ingredients of our work? Why are they important?
+- Highlight the key quantitative or qualitative outcomes.
+- What is the policy implication of our work?
 
 Please make sure the abstract reads smoothly and is well-motivated. This should be one continuous paragraph with no breaks between the lines.
 """,
     "Introduction": """
 - Longer version of the Abstract, i.e. of the entire paper
-- What are we trying to do and why is it relevant?
-- Why is this hard? 
-- How do we solve it (i.e. our contribution!)
-- How do we verify that we solved it (e.g. Experiments and results)
-- New trend: specifically list your contributions as bullet points
-- Extra space? Future work!
+- What are we trying to do?
+- What are the key ingredients of our work? Why are they important?
+- What are our main results?
+- What is the policy implication of our work?
+- Extra space? Limitations of our work!
 """,
-    "Related Work": """
-- Academic siblings of our work, i.e. alternative attempts in literature at trying to solve the same problem. 
-- Goal is to “Compare and contrast” - how does their approach differ in either assumptions or method? If their method is applicable to our Problem Setting I expect a comparison in the experimental section. If not, there needs to be a clear statement why a given method is not applicable. 
-- Note: Just describing what another paper is doing is not enough. We need to compare and contrast.
+    "Literature Review": """
+- Summarize existing academic on this topic.
+- Goal is to “Synthesize - what is the academic consensus on this problem?” Group the relevant literature (for example, by model type, data approach, or historical tariff impacts) and highlight the consensus or debates.
+- How does our work incorporate the most important ideas in the literature?
 """,
-    "Background": """
-- Academic Ancestors of our work, i.e. all concepts and prior work that are required for understanding our method. 
-- Usually includes a subsection, Problem Setting, which formally introduces the problem setting and notation (Formalism) for our method. Highlights any specific assumptions that are made that are unusual. 
-- Note: If our paper introduces a novel problem setting as part of its contributions, it's best to have a separate Section.
-""",
-    "Method": """
-- What we do. Why we do it. All described using the general Formalism introduced in the Problem Setting and building on top of the concepts / foundations introduced in Background.
-""",
-    "Experimental Setup": """
-- How do we test that our stuff works? Introduces a specific instantiation of the Problem Setting and specific implementation details of our Method for this Problem Setting.
-- Do not imagine unknown hardware details.
-- Includes a description of the dataset, evaluation metrics, important hyperparameters, and implementation details.
+    "Model": """
+- A formal mathematical description of the model we are proposing. Define all variables and parameters carefully.
+- List each assumption and briefly explain why it is reasonable for this study.
+- Justify how you choose parameter values for the model.  
+- Explain how the model is solved.
+- Indicate whether and how you assess the robustness of the results to changes in key assumptions or parameters.
 """,
     "Results": """
-- Shows the results of running Method on our problem described in Experimental Setup.
-- Includes statements on hyperparameters and other potential issues of fairness.
-- Only includes results that have actually been run and saved in the logs. Do not hallucinate results that don't exist.
-- If results exist: compares to baselines and includes statistics and confidence intervals. 
-- If results exist: includes ablation studies to show that specific parts of the method are relevant.
-- Discusses limitations of the method.
-- Make sure to include all the results from the experiments, and include all relevant figures.
+- Present the main outcomes of the analysis.
+- Include charts or tables that visually illustrate the results—label them clearly and explain their relevance.
+- Provide economic intuition behind the results.
+- Explain the practical implications of the results.
+- Discuss any limitations of the analysis.
 """,
     "Conclusion": """
 - Brief recap of the entire paper.
-- To keep going with the analogy, you can think of future work as (potential) academic offspring.
+- Explain the policy implications of our work.
 """,
 }
 
@@ -217,7 +208,7 @@ Fix any remaining errors as before:
 )
 
 # CITATION HELPERS
-citation_system_msg = """You are an ambitious AI PhD student who is looking to publish a paper that will contribute significantly to the field.
+citation_system_msg = """You are an expert financial economist analyzing the effects of government policy on the economy for a hedge fund portfolio manager.
 You have already written an initial draft of the paper and now you are looking to add missing citations to related papers throughout the paper.
 The related work section already has some initial comments on which papers to add and discuss.
 

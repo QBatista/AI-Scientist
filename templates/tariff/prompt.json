@@ -1,0 +1,4 @@
+{
+    "system": "You are a financial economist working at a hedge fund. Your job is to analyze the effect of government policy on the economy to help a portfolio manager make investment decisions.",
+    "task_description": "The President of the United States has decided to impose an additional 25% tariffs on cars imported from Japan. Your task is to build an economic model to predict by how much the market value of Japanese car manufacturers should fall. You are given the following file to work with, which implements a very simple partial equilibrium economic model."
+}

@@ -13,7 +13,7 @@ from aider.io import InputOutput
 from aider.models import Model
 from datetime import datetime
 
-from ai_scientist.generate_ideas import generate_ideas, check_idea_novelty
+from ai_scientist.generate_ideas import generate_ideas, check_idea_significant_improvement
 from ai_scientist.llm import create_client, AVAILABLE_LLMS
 from ai_scientist.perform_experiments import perform_experiments
 from ai_scientist.perform_review import perform_review, load_paper, perform_improvement
@@ -34,9 +34,9 @@ def parse_arguments():
         help="Skip idea generation and load existing ideas",
     )
     parser.add_argument(
-        "--skip-novelty-check",
+        "--skip-significant-improvement-check",
         action="store_true",
-        help="Skip novelty check and use existing ideas",
+        help="Skip significant improvement check and use existing ideas",
     )
     # add type of experiment (nanoGPT, Boston, etc.)
     parser.add_argument(
@@ -342,8 +342,8 @@ if __name__ == "__main__":
         max_num_generations=args.num_ideas,
         num_reflections=NUM_REFLECTIONS,
     )
-    if not args.skip_novelty_check:
-        ideas = check_idea_novelty(
+    if not args.skip_significant_improvement_check:
+        ideas = check_idea_significant_improvement(
             ideas,
             base_dir=base_dir,
             client=client,
@@ -354,7 +354,7 @@ if __name__ == "__main__":
     with open(osp.join(base_dir, "ideas.json"), "w") as f:
         json.dump(ideas, f, indent=4)
 
-    novel_ideas = [idea for idea in ideas if idea["novel"]]
+    novel_ideas = [idea for idea in ideas if idea["significant_improvement"]]
     # novel_ideas = list(reversed(novel_ideas))
 
     if args.parallel > 0:

@@ -22,9 +22,8 @@ Here are the ideas that you have already generated:
 {prev_ideas_string}
 '''
 
-Come up with the next impactful and creative idea for research experiments and directions you can feasibly investigate with the code provided.
+Come up with the next impactful and creative idea for research experiments and directions you can feasibly investigate with the code provided to significantly improve the model.
 Note that you will not have access to any additional resources or datasets.
-Make sure any idea is not overfit the specific training dataset or model, and has wider significance.
 
 Respond in the following format:
 
@@ -36,15 +35,15 @@ NEW IDEA JSON:
 <JSON>
 ```
 
-In <THOUGHT>, first briefly discuss your intuitions and motivations for the idea. Detail your high-level plan, necessary design choices and ideal outcomes of the experiments. Justify how the idea is different from the existing ones.
+In <THOUGHT>, first briefly discuss your intuitions and motivations for the idea. Detail your high-level plan, necessary design choices and ideal outcomes of the experiments. Justify why this idea would make the model significantly better.
 
 In <JSON>, provide the new idea in JSON format with the following fields:
 - "Name": A shortened descriptor of the idea. Lowercase, no spaces, underscores allowed.
 - "Title": A title for the idea, will be used for the report writing.
 - "Experiment": An outline of the implementation. E.g. which functions need to be added or modified, how results will be obtained, ...
-- "Interestingness": A rating from 1 to 10 (lowest to highest).
+- "Empirical relevance": A rating from 1 to 10 (lowest to highest).
+- "Theoretical soundness": A rating from 1 to 10 (lowest to highest).
 - "Feasibility": A rating from 1 to 10 (lowest to highest).
-- "Novelty": A rating from 1 to 10 (lowest to highest).
 
 Be cautious and realistic on your ratings.
 This JSON will be automatically parsed, so ensure the format is precise.
@@ -52,7 +51,7 @@ You will have {num_reflections} rounds to iterate on the idea, but do not need t
 """
 
 idea_reflection_prompt = """Round {current_round}/{num_reflections}.
-In your thoughts, first carefully consider the quality, novelty, and feasibility of the idea you just created.
+In your thoughts, first carefully consider the quality, soundness, and feasibility of the idea you just created.
 Include any other factors that you think are important in evaluating the idea.
 Ensure the idea is clear and concise, and the JSON is the correct format.
 Do not make things overly complicated.
@@ -219,8 +218,8 @@ def generate_next_idea(
                         num_reflections=num_reflections,
                     )
                     + """
-Completed ideas have an additional "Score" field which indicates the assessment by an expert ML reviewer.
-This is on a standard 1-10 ML conference scale.
+Completed ideas have an additional "Score" field which indicates the assessment by an expert financial economist reviewer.
+This is on a 1-10 scale.
 Scores of 0 indicate the idea failed either during experimentation, writeup or reviewing.
 """,
                     client=client,
@@ -353,16 +352,16 @@ def search_for_papers(query, result_limit=10, engine="semanticscholar") -> Union
 
 
 
-novelty_system_msg = """You are an ambitious AI PhD student who is looking to publish a paper that will contribute significantly to the field.
-You have an idea and you want to check if it is novel or not. I.e., not overlapping significantly with existing literature or already well explored.
-Be a harsh critic for novelty, ensure there is a sufficient contribution in the idea for a new conference or workshop paper.
-You will be given access to the Semantic Scholar API, which you may use to survey the literature and find relevant papers to help you make your decision.
+novelty_system_msg = """You are an expert financial economist evaluating ideas for their potential to significantly improve the model.
+You need to determine if an idea would lead to substantial improvements in model performance for financial applications.
+Be a rigorous evaluator, focusing on practical improvements in financial modeling capabilities and performance metrics.
+You will be given access to the Semantic Scholar API, which you may use to survey the literature and find relevant papers to inform your decision.
 The top 10 results for any search query will be presented to you with the abstracts.
 
-You will be given {num_rounds} to decide on the paper, but you do not need to use them all.
-At any round, you may exit early and decide on the novelty of the idea.
-Decide a paper idea is novel if after sufficient searching, you have not found a paper that significantly overlaps with your idea.
-Decide a paper idea is not novel, if you have found a paper that significantly overlaps with your idea.
+You will be given {num_rounds} to evaluate the idea, but you do not need to use them all.
+At any round, you may exit early and decide on the improvement potential of the idea.
+Decide an idea has significant improvement potential if it would likely lead to measurable improvements in the model's financial prediction performance.
+Decide an idea does not have significant improvement potential if it would likely have minimal or no impact on the model's performance.
 
 {task_description}
 <experiment.py>
@@ -393,16 +392,16 @@ RESPONSE:
 ```
 
 In <THOUGHT>, first briefly reason over the idea and identify any query that could help you make your decision.
-If you have made your decision, add "Decision made: novel." or "Decision made: not novel." to your thoughts.
+If you have made your decision, add "Decision made: significant improvement." or "Decision made: not significant improvement." to your thoughts.
 
 In <JSON>, respond in JSON format with ONLY the following field:
-- "Query": An optional search query to search the literature (e.g. attention is all you need). You must make a query if you have not decided this round.
+- "Query": An optional search query to search the literature (e.g. financial time series forecasting). You must make a query if you have not decided this round.
 
 A query will work best if you are able to recall the exact name of the paper you are looking for, or the authors.
 This JSON will be automatically parsed, so ensure the format is precise.'''
 
 
-def check_idea_novelty(
+def check_idea_significant_improvement(
         ideas,
         base_dir,
         client,
@@ -417,13 +416,13 @@ def check_idea_novelty(
         task_description = prompt["task_description"]
 
     for idx, idea in enumerate(ideas):
-        if "novel" in idea:
+        if "significant_improvement" in idea:
             print(f"Skipping idea {idx}, already checked.")
             continue
 
-        print(f"\nChecking novelty of idea {idx}: {idea['Name']}")
+        print(f"\nChecking improvement potential of idea {idx}: {idea['Name']}")
 
-        novel = False
+        significant_improvement = False
         msg_history = []
         papers_str = ""
 
@@ -445,12 +444,12 @@ def check_idea_novelty(
                     ),
                     msg_history=msg_history,
                 )
-                if "decision made: novel" in text.lower():
-                    print("Decision made: novel after round", j)
-                    novel = True
+                if "decision made: significant improvement" in text.lower():
+                    print("Decision made: significant improvement after round", j)
+                    significant_improvement = True
                     break
-                if "decision made: not novel" in text.lower():
-                    print("Decision made: not novel after round", j)
+                if "decision made: not significant improvement" in text.lower():
+                    print("Decision made: not significant improvement after round", j)
                     break
 
                 ## PARSE OUTPUT
@@ -482,7 +481,7 @@ def check_idea_novelty(
                 print(f"Error: {e}")
                 continue
 
-        idea["novel"] = novel
+        idea["significant_improvement"] = significant_improvement
 
     # Save results to JSON file
     results_file = osp.join(base_dir, "ideas.json")
@@ -518,9 +517,9 @@ if __name__ == "__main__":
         help="Skip idea generation and use existing ideas.",
     )
     parser.add_argument(
-        "--check-novelty",
+        "--check-significant-improvement",
         action="store_true",
-        help="Check novelty of ideas.",
+        help="Check if ideas would significantly improve the model.",
     )
     args = parser.parse_args()
 
@@ -537,8 +536,8 @@ if __name__ == "__main__":
         max_num_generations=MAX_NUM_GENERATIONS,
         num_reflections=NUM_REFLECTIONS,
     )
-    if args.check_novelty:
-        ideas = check_idea_novelty(
+    if args.check_significant_improvement:
+        ideas = check_idea_significant_improvement(
             ideas,
             base_dir=base_dir,
             client=client,
