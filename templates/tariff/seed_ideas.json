@@ -1,0 +1,10 @@
+[
+    {
+        "Name": "multi_firm_tariff_impact_model",
+        "Title": "Multi-Firm Dynamic Equilibrium Analysis of Japanese Auto Tariffs",
+        "Experiment": "Extend the partial equilibrium model to incorporate multiple Japanese car manufacturers with different market shares and cost structures. Implement a dynamic response mechanism where manufacturers can adjust prices and production over time in response to tariffs. This will provide a more nuanced analysis of how the 25% tariff affects different manufacturers and captures strategic interactions between firms that influence market value impact.",
+        "Empirical relevance": 8,
+        "Theoretical soundness": 8,
+        "Feasibility": 8
+    }
+] 
