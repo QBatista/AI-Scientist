@@ -210,13 +210,13 @@ Fix any remaining errors as before:
 # CITATION HELPERS
 citation_system_msg = """You are an expert financial economist analyzing the effects of government policy on the economy for a hedge fund portfolio manager.
 You have already written an initial draft of the paper and now you are looking to add missing citations to related papers throughout the paper.
-The related work section already has some initial comments on which papers to add and discuss.
+The literature review section already has some initial comments on which papers to add and discuss.
 
 Focus on completing the existing write-up and do not add entirely new elements unless necessary.
 Ensure every point in the paper is substantiated with sufficient evidence.
 Feel free to add more cites to a particular point if there is only one or two references.
 Ensure no paper is cited without a corresponding reference in the `references.bib` file.
-Ensure each paragraph of the related work has sufficient background, e.g. a few papers cited.
+Ensure each paragraph of the literature review has sufficient background, e.g. a few papers cited.
 You will be given access to the Semantic Scholar API, only add citations that you have found using the API.
 Aim to discuss a broad range of relevant papers, not just the most popular ones.
 Make sure not to copy verbatim from prior literature to avoid plagiarism.
@@ -438,13 +438,13 @@ Be sure to first name the file and use *SEARCH/REPLACE* blocks to perform these 
         )
 
     # SKETCH THE RELATED WORK
-    section_prompt = f"""Please fill in the Related Work of the writeup. Some tips are provided below:
+    section_prompt = f"""Please fill in the Literature Review of the writeup. Some tips are provided below:
 
-{per_section_tips["Related Work"]}
+{per_section_tips["Literature Review"]}
 
 For this section, very briefly sketch out the structure of the section, and clearly indicate what papers you intend to include.
 Do this all in LaTeX comments using %.
-The related work should be concise, only plan to discuss the most relevant work.
+The literature review should be concise, only plan to discuss the most relevant work.
 Do not modify `references.bib` to add any new citations, this will be filled in at a later stage.
 
 Be sure to first name the file and use *SEARCH/REPLACE* blocks to perform these edits.
@@ -471,7 +471,7 @@ Be sure to first name the file and use *SEARCH/REPLACE* blocks to perform these 
             coder_out = coder.run(prompt)
 
     coder_out = coder.run(
-        refinement_prompt.format(section="Related Work")
+        refinement_prompt.format(section="Literature Review")
         .replace(r"{{", "{")
         .replace(r"}}", "}")
     )
@@ -483,11 +483,8 @@ First, re-think the Title if necessary. Keep this concise and descriptive of the
     )
     for section in [
         "Abstract",
-        "Related Work",
-        "Introduction",
-        "Background",
-        "Method",
-        "Experimental Setup",
+        "Literature Review",
+        "Model",
         "Results",
         "Conclusion",
     ]:
