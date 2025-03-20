@@ -133,7 +133,7 @@ per_section_tips = {
 - What are we trying to do?
 - What are the key ingredients of our work? Why are they important?
 - Highlight the key quantitative or qualitative outcomes.
-- What is the policy implication of our work?
+- What is the practical implication of our work for a portfolio manager?
 
 Please make sure the abstract reads smoothly and is well-motivated. This should be one continuous paragraph with no breaks between the lines.
 """,
@@ -142,7 +142,7 @@ Please make sure the abstract reads smoothly and is well-motivated. This should 
 - What are we trying to do?
 - What are the key ingredients of our work? Why are they important?
 - What are our main results?
-- What is the policy implication of our work?
+- What is the practical implication of our work for a portfolio manager?
 - Extra space? Limitations of our work!
 """,
     "Literature Review": """
@@ -166,7 +166,7 @@ Please make sure the abstract reads smoothly and is well-motivated. This should 
 """,
     "Conclusion": """
 - Brief recap of the entire paper.
-- Explain the policy implications of our work.
+- Explain the practical implications of our work for a portfolio manager.
 """,
 }
 
@@ -412,9 +412,8 @@ Be sure to first name the file and use *SEARCH/REPLACE* blocks to perform these 
     )
     for section in [
         "Introduction",
-        "Background",
-        "Method",
-        "Experimental Setup",
+        "Literature Review",
+        "Model",
         "Results",
         "Conclusion",
     ]:
