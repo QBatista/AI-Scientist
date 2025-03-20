@@ -62,6 +62,8 @@ def run_experiment(folder_name, run_num, timeout=7200):
             with open(osp.join(cwd, f"run_{run_num}", "final_info.json"), "r") as f:
                 results = json.load(f)
 
+            results = {k: v["final_prediction"] for k, v in results.items()}
+
             next_prompt = f"""Run {run_num} completed. Here are the results:
 {results}
 

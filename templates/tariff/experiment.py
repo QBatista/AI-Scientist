@@ -155,6 +155,9 @@ def run_experiment():
                 
         results['comparisons'][str(tau)] = pct_changes
     
+    # Add final prediction for the drop in market value with a 25% tariff
+    results['final_prediction'] = results['comparisons']['0.25']['value']
+    
     return results
 
 def main():
