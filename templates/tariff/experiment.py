@@ -156,6 +156,9 @@ def run_experiment():
         results['comparisons'][str(tau)] = pct_changes
     
     # Add final prediction for the drop in market value with a 25% tariff
+    # This key should contain the most important prediction from the experiment
+    # This is the final prediction for the experiment
+    # ALWAYS INCLUDE THE FINAL PREDICTION IN THE RESULTS WHEN MODIFYING THIS SCRIPT!
     results['final_prediction'] = results['comparisons']['0.25']['value']
     
     return results
